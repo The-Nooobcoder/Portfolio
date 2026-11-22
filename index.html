@@ -72,8 +72,7 @@
     }
     </script>
 
-    <!-- Favicon: JP Gradient Logo -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20style%3D%22stop-color%3A%232563eb%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20style%3D%22stop-color%3A%239333ea%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22url(%23g)%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222.5%22%20font-family%3D%22system-ui%2C%20sans-serif%22%20font-size%3D%2217%22%20font-weight%3D%22700%22%20fill%3D%22white%22%20text-anchor%3D%22middle%22%3EJP%3C%2Ftext%3E%3C%2Fsvg%3E">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -166,9 +165,126 @@
 
         .badge-glow { animation: badge-pulse 3s ease-in-out infinite; }
         @keyframes badge-pulse { 0%, 100% { box-shadow: 0 0 8px rgba(59,130,246,0.2); } 50% { box-shadow: 0 0 16px rgba(139,92,246,0.3); } }
+
+        .brand-mark {
+            display: inline-grid;
+            place-items: center;
+            flex: none;
+            width: 28px;
+            height: 28px;
+            border: 1px solid #6366f1;
+            border-radius: 7px;
+            background: #151525;
+        }
+
+        .logo-intro { display: none; }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .logo-intro {
+                position: fixed;
+                inset: 0;
+                z-index: 100;
+                display: grid;
+                place-items: center;
+                background: radial-gradient(ellipse at center, #17152d 0%, #0a0a0f 60%);
+                animation: logo-intro-exit 550ms ease-in-out 2.35s forwards;
+            }
+
+            .logo-intro svg {
+                width: clamp(140px, 35vw, 224px);
+                height: auto;
+                overflow: visible;
+                filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.28));
+            }
+
+            .logo-intro .pen-stroke {
+                stroke-dasharray: 1.02 1.02;
+                stroke-dashoffset: 1.02;
+                animation: logo-intro-write var(--duration) var(--ease, ease-in-out) var(--delay) both;
+            }
+
+            .logo-intro .ink-finish {
+                animation: logo-intro-ink-finish 100ms linear var(--delay) both;
+            }
+
+            @keyframes logo-intro-write {
+                from { opacity: 0; }
+                5% { opacity: 1; }
+                to { opacity: 1; stroke-dashoffset: 0; }
+            }
+
+            @keyframes logo-intro-ink-finish {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            @keyframes logo-intro-exit {
+                to { opacity: 0; visibility: hidden; }
+            }
+        }
+
     </style>
 </head>
 <body>
+    <div class="logo-intro" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+            <defs>
+                <linearGradient id="intro-accent" x2="100%" y2="100%">
+                    <stop stop-color="#3b82f6"/>
+                    <stop offset=".5" stop-color="#8b5cf6"/>
+                    <stop offset="1" stop-color="#06b6d4"/>
+                </linearGradient>
+                <mask id="intro-j" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40">
+                    <path class="pen-stroke" pathLength="1" d="M15.5 10v13c0 3.5-1.7 5.2-4.4 5.2-2.5 0-4.3-1.6-4.3-4.3"
+                          fill="none" stroke="white" stroke-width="7" stroke-linecap="round" style="--duration: 550ms; --delay: 760ms"/>
+                    <rect class="ink-finish" width="40" height="40" fill="white" style="--delay: 1310ms"/>
+                </mask>
+                <clipPath id="intro-p-stem">
+                    <rect width="24.6" height="40"/>
+                </clipPath>
+                <mask id="intro-p" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40">
+                    <g fill="none" stroke="white" stroke-width="6" stroke-linecap="butt" stroke-linejoin="round">
+                        <path class="pen-stroke" pathLength="1" d="M22.5 31V9" stroke-width="9" clip-path="url(#intro-p-stem)"
+                              style="--duration: 280ms; --delay: 1390ms; --ease: linear"/>
+                        <path class="pen-stroke" pathLength="1" d="M22 12h5.5c3.4 0 5.6 1.7 5.6 4.4s-2.2 4.4-5.6 4.4H22" stroke-width="8"
+                              style="--duration: 390ms; --delay: 1640ms; --ease: linear"/>
+                    </g>
+                </mask>
+            </defs>
+            <rect x="1" y="1" width="38" height="38" rx="10" fill="#151525"/>
+            <path class="pen-stroke" pathLength="1" d="M20 1h9a10 10 0 0 1 10 10v18a10 10 0 0 1-10 10H11A10 10 0 0 1 1 29V11A10 10 0 0 1 11 1Z"
+                  fill="none" stroke="url(#intro-accent)" stroke-width="2" stroke-linecap="round"
+                  style="--duration: 650ms; --delay: 80ms; --ease: linear"/>
+            <g text-anchor="middle" font-size="25" font-weight="700" letter-spacing="-.625" fill="url(#intro-accent)">
+                <text x="20" y="29" mask="url(#intro-j)">J<tspan opacity="0">P</tspan></text>
+                <text x="20" y="29" mask="url(#intro-p)"><tspan opacity="0">J</tspan>P</text>
+            </g>
+        </svg>
+    </div>
+
+
+    <script>
+        {
+            const intro = document.querySelector('.logo-intro');
+
+            function dismissIntro() {
+                intro.remove();
+                document.removeEventListener('focusin', dismissIntro);
+            }
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                dismissIntro();
+            } else {
+                intro.addEventListener('animationend', event => {
+                    if (event.target === intro && event.animationName === 'logo-intro-exit') {
+                        dismissIntro();
+                    }
+                });
+                document.addEventListener('focusin', dismissIntro);
+            }
+        }
+    </script>
+
     <canvas id="particles"></canvas>
     
     <div class="orb w-96 h-96 bg-blue-600 top-0 right-0 fixed" style="top:-10%;right:-5%;" data-speed="20"></div>
@@ -179,9 +295,7 @@
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="#hero" class="flex items-center gap-2.5 group">
-                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-shadow">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 8L8 10.5V15.5L12 18L16 15.5V10.5L12 8Z" fill="white" opacity="0.9"/><path d="M12 2V8" stroke="white" stroke-width="1.2"/><path d="M3 7L8 10.5" stroke="white" stroke-width="1.2"/><path d="M21 7L16 10.5" stroke="white" stroke-width="1.2"/></svg>
-                </div>
+                <span class="brand-mark" aria-hidden="true"><span class="gradient-text text-sm font-bold tracking-tight leading-none">JP</span></span>
                 <span class="text-lg font-bold gradient-text tracking-tight">Justin PJ</span>
             </a>
             <div class="hidden md:flex items-center gap-6">
@@ -239,7 +353,7 @@
                     <!-- Profile Image with neatly aligned floating badges -->
                     <div class="relative w-56 h-56 md:w-64 md:h-64 mx-auto md:mx-0 mb-3">
                         <div class="w-full h-full rounded-2xl overflow-hidden glass glow-mixed p-1">
-                            <img src="Profile.jpeg" alt="Justin PJ - Full Stack Developer" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://picsum.photos/seed/justin-pj-profile/400/400.jpg'">
+                            <img src="Profile.jpeg" alt="Justin PJ - Full Stack Developer" class="w-full h-full object-cover rounded-xl">
                         </div>
                         <div class="absolute -top-3 left-3 glass-light px-2.5 py-1 rounded-lg float"><span class="text-[10px] font-medium text-blue-400">.NET Core</span></div>
                         <div class="absolute -top-3 right-3 glass-light px-2.5 py-1 rounded-lg float-d1"><span class="text-[10px] font-medium text-red-400">Angular</span></div>
@@ -333,7 +447,7 @@
             <div class="grid md:grid-cols-3 gap-6 mb-6">
                 <div class="project-card glass rounded-2xl overflow-hidden reveal-scale" style="transition-delay:0.1s">
                     <div class="relative h-44 overflow-hidden">
-                        <img src="https://www.myamericannurse.com/wp-content/uploads/2022/11/shutterstock_1101930905_EHRExperience-scaled.jpg" alt="Medicaid EHR Software" class="project-img w-full h-full object-cover">
+                        <img src="medicaid-ehr.jpg" alt="Clinician reviewing an electronic health record dashboard" class="project-img w-full h-full object-cover">
                         <div class="project-overlay absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent flex items-end p-5">
                             <span class="px-3 py-1 text-xs font-medium rounded-full glass-light text-blue-300"><i class="fas fa-hospital text-[10px] mr-1"></i> Healthcare</span>
                         </div>
@@ -346,7 +460,7 @@
                 </div>
                 <div class="project-card glass rounded-2xl overflow-hidden reveal-scale" style="transition-delay:0.2s">
                     <div class="relative h-44 overflow-hidden">
-                        <img src="https://www.calderltd.com/wp-content/uploads/2025/05/hazradous-area-compliance-banner-1.jpg" alt="HazConnect" class="project-img w-full h-full object-cover">
+                        <img src="hazconnect.jpg" alt="Engineer inspecting equipment at an industrial facility" class="project-img w-full h-full object-cover">
                         <div class="project-overlay absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent flex items-end p-5">
                             <span class="px-3 py-1 text-xs font-medium rounded-full glass-light text-amber-300"><i class="fas fa-exclamation-triangle text-[10px] mr-1"></i> Compliance</span>
                         </div>
@@ -359,7 +473,7 @@
                 </div>
                 <div class="project-card glass rounded-2xl overflow-hidden reveal-scale" style="transition-delay:0.3s">
                     <div class="relative h-44 overflow-hidden">
-                        <img src="https://www.dhl.com/content/dam/dhl/global/delivered/images/sub-story-stage-large/d157-dl-business-logistics.web.745.320.jpg" alt="Lab Express" class="project-img w-full h-full object-cover">
+                        <img src="lab-express.jpg" alt="Courier loading a sealed medical transport case" class="project-img w-full h-full object-cover">
                         <div class="project-overlay absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent flex items-end p-5">
                             <span class="px-3 py-1 text-xs font-medium rounded-full glass-light text-green-300"><i class="fas fa-truck-medical text-[10px] mr-1"></i> Logistics</span>
                         </div>
@@ -376,7 +490,7 @@
             <div class="grid md:grid-cols-3 gap-6 mb-6">
                 <div class="project-card glass rounded-2xl overflow-hidden reveal-scale" style="transition-delay:0.1s">
                     <div class="relative h-44 overflow-hidden">
-                        <img src="https://sensorex.com/wp-content/smush-webp/2022/10/iStock-1208824917-Water-Molecules-scaled.jpg.webp" alt="Waltron" class="project-img w-full h-full object-cover">
+                        <img src="waltron.jpg" alt="Technician testing an industrial water sample" class="project-img w-full h-full object-cover">
                         <div class="project-overlay absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent flex items-end p-5">
                             <span class="px-3 py-1 text-xs font-medium rounded-full glass-light text-pink-300"><i class="fab fa-wordpress text-[10px] mr-1"></i> CMS</span>
                         </div>
@@ -389,7 +503,7 @@
                 </div>
                 <div class="project-card glass rounded-2xl overflow-hidden reveal-scale" style="transition-delay:0.2s">
                     <div class="relative h-44 overflow-hidden">
-                        <img src="https://eacib.com/wp-content/uploads/2016/07/banner2.jpg" alt="Tricaredme" class="project-img w-full h-full object-cover">
+                        <img src="tricaredme.jpg" alt="Oxygen concentrator in a home-care setting" class="project-img w-full h-full object-cover">
                         <div class="project-overlay absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent flex items-end p-5">
                             <span class="px-3 py-1 text-xs font-medium rounded-full glass-light text-purple-300"><i class="fab fa-shopify text-[10px] mr-1"></i> E-commerce</span>
                         </div>
@@ -402,7 +516,7 @@
                 </div>
                 <div class="project-card glass rounded-2xl overflow-hidden reveal-scale" style="transition-delay:0.3s">
                     <div class="relative h-44 overflow-hidden">
-                        <img src="https://www.railroadsoftware.com/wp-content/uploads/2024/10/Unlocking-the-Rail-Industrys-Hidden-Goldmine-min.jpg" alt="ViaQuest Employee Tracking" class="project-img w-full h-full object-cover">
+                        <img src="viaquest.jpg" alt="Field supervisor reviewing schedules on a tablet" class="project-img w-full h-full object-cover">
                         <div class="project-overlay absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent flex items-end p-5">
                             <span class="px-3 py-1 text-xs font-medium rounded-full glass-light text-purple-300"><i class="fas fa-users text-[10px] mr-1"></i> HR Tech</span>
                         </div>
@@ -419,7 +533,7 @@
             <div class="grid md:grid-cols-1 gap-6">
                 <div class="project-card glass rounded-2xl overflow-hidden reveal-scale" style="transition-delay:0.1s">
                     <div class="relative h-44 overflow-hidden">
-                        <img src="https://files.cyberriskalliance.com/wp-content/uploads/2023/08/Cloud-Security-GettyImages-1087885966.jpg" alt="Kentico CMS & CRM" class="project-img w-full h-full object-cover">
+                        <img src="kentico.jpg" alt="Developer reviewing a CMS dashboard" class="project-img w-full h-full object-cover">
                         <div class="project-overlay absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent flex items-end p-5">
                             <span class="px-3 py-1 text-xs font-medium rounded-full glass-light text-pink-300"><i class="fas fa-globe text-[10px] mr-1"></i> CMS & CRM</span>
                         </div>
@@ -638,9 +752,7 @@
     <footer class="relative z-10 border-t border-white/5 py-10 px-6">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-md bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M12 8L8 10.5V15.5L12 18L16 15.5V10.5L12 8Z" fill="white" opacity="0.9"/></svg>
-                </div>
+                <a href="#hero" class="brand-mark" aria-label="Back to top"><span class="gradient-text text-sm font-bold tracking-tight leading-none" aria-hidden="true">JP</span></a>
                 <span class="text-sm text-gray-600">© <span id="footer-year"></span> Justin PJ. All rights reserved.</span>
             </div>
             <div class="flex items-center gap-6">
