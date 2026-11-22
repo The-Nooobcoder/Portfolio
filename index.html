@@ -162,6 +162,21 @@
 
         .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
 
+        .nav-backdrop {
+            opacity: 0;
+            background: rgb(10 10 15 / 0.48);
+            border-bottom: 1px solid rgb(255 255 255 / 0.06);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            transition: opacity 240ms ease;
+        }
+
+        #navbar.is-scrolled .nav-backdrop { opacity: 1; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .nav-backdrop { transition: none; }
+        }
+
         .mobile-menu {
             width: 100%;
             max-width: none;
@@ -183,7 +198,7 @@
             #credential-dialog-image { max-height: 68dvh; }
         }
 
-        @media (pointer: coarse), (prefers-reduced-motion: reduce) {
+        @media (prefers-reduced-motion: reduce) {
             #particles { display: none; }
         }
 
@@ -391,7 +406,7 @@
 
     <!-- Navigation -->
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
-        <div class="absolute inset-0 border-b border-white/10 bg-dark-900/95 backdrop-blur-md" aria-hidden="true"></div>
+        <div class="nav-backdrop absolute inset-0 pointer-events-none" aria-hidden="true"></div>
         <div class="relative z-10 max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:py-4 flex items-center justify-between">
             <a href="#hero" class="flex items-center gap-2.5 group">
                 <span class="brand-mark" aria-hidden="true"><span class="gradient-text text-sm font-bold tracking-tight leading-none">JP</span></span>
@@ -991,6 +1006,13 @@
             setTimeout(typeEffect, 2000);
         }
 
+        const navbar = document.getElementById('navbar');
+        function updateNavbar() {
+            navbar.classList.toggle('is-scrolled', window.scrollY > 24);
+        }
+        window.addEventListener('scroll', updateNavbar, { passive: true });
+        updateNavbar();
+
         // Mobile Menu
         const menuToggle = document.getElementById('menu-toggle');
         const menuClose = document.getElementById('menu-close');
@@ -1009,6 +1031,10 @@
         // --- 6. Interactive Galaxy Canvas (Drifting Stars + Mouse Warping + Exploding Shooting Stars) ---
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
+        const backgroundMotion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+        const lightweightBackground = window.matchMedia('(pointer: coarse), (max-width: 639px)');
+        let backgroundFrame = 0;
+        let lastBackgroundDraw = 0;
         let width, height, stars, shootingStars, explosions;
         let mouse = { x: null, y: null, radius: 120 };
 
@@ -1074,7 +1100,7 @@
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance < mouse.radius) {
+                if (mouse.x !== null && distance > 0 && distance < mouse.radius) {
                     let forceDirectionX = dx / distance;
                     let forceDirectionY = dy / distance;
                     let force = (mouse.radius - distance) / mouse.radius;
@@ -1186,16 +1212,23 @@
 
         function initParticles() {
             stars = [];
-            let numberOfStars = (canvas.height * canvas.width) / 5000;
+            const lightweight = lightweightBackground.matches;
+            const area = canvas.height * canvas.width;
+            const numberOfStars = lightweight ? Math.min(60, Math.ceil(area / 11000)) : Math.ceil(area / 5000);
             for (let i = 0; i < numberOfStars; i++) stars.push(new Star());
             
             shootingStars = [];
-            for (let i = 0; i < 3; i++) shootingStars.push(new ShootingStar());
+            const numberOfShootingStars = lightweight ? 1 : 3;
+            for (let i = 0; i < numberOfShootingStars; i++) shootingStars.push(new ShootingStar());
             
             explosions = [];
         }
 
-        function animate() {
+        function animate(now) {
+            backgroundFrame = requestAnimationFrame(animate);
+            // Use at most 30 updates per second for a gentler mobile background.
+            if (lightweightBackground.matches && now - lastBackgroundDraw < 1000 / 30) return;
+            lastBackgroundDraw = now;
             ctx.clearRect(0, 0, width, height);
             
             // Draw & Update Stars
@@ -1218,11 +1251,11 @@
                     explosions.splice(i, 1);
                 }
             }
-            
-            requestAnimationFrame(animate);
+
         }
 
         window.addEventListener('mousemove', (e) => {
+            if (!pointerEffects.matches) return;
             mouse.x = e.clientX;
             mouse.y = e.clientY;
         });
@@ -1230,11 +1263,19 @@
             mouse.x = null;
             mouse.y = null;
         });
-        if (ctx && pointerEffects.matches) {
-            window.addEventListener('resize', resize);
+        function syncBackground() {
+            cancelAnimationFrame(backgroundFrame);
+            window.removeEventListener('resize', resize);
+            if (!ctx || !backgroundMotion.matches) return;
+            lastBackgroundDraw = 0;
             resize();
-            animate();
+            window.addEventListener('resize', resize);
+            backgroundFrame = requestAnimationFrame(animate);
         }
+
+        backgroundMotion.addEventListener('change', syncBackground);
+        lightweightBackground.addEventListener('change', syncBackground);
+        syncBackground();
 
     </script>
 </body>
